@@ -12,13 +12,25 @@ services:
       - mm-config:/opt/magic_mirror/config
       - mm-modules:/opt/magic_mirror/modules
       - mm-css:/opt/magic_mirror/css
+    environment:
+      # MagicMirror runs in server-only mode (no Electron)
+      # Browser block will display the UI
+      MM_PORT: '8080'
   browser:
     image: balenablocks/browser
     privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse
     network_mode: host
+    labels:
+      io.balena.features.dbus: "1"
     environment:
       LAUNCH_URL: 'http://localhost:8080'
       KIOSK: '1'
+      # WaveShare 13.3" display is 1920x1080
+      WINDOW_SIZE: '1920,1080'
+      # Enable touch support for capacitive touchscreen
+      ENABLE_GPU: '1'
+      # Disable cursor for clean mirror appearance
+      CURSOR: '0'
   wifi-connect:
     image: balenablocks/wifi-connect:armv7hf
     restart: always

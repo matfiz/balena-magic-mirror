@@ -1,11 +1,20 @@
 # balena-magic-mirror
-Simple balena implementation of [MagicMirror](https://magicmirror.builders/) on a Raspberry Pi 3.
+Balena implementation of [MagicMirror²](https://magicmirror.builders/) optimized for Raspberry Pi devices, including the WaveShare 13.3" Magic Mirror.
 
 Using [balena](https://www.balena.io/) makes MagicMirror (MM) super easy to set up and maintain when your Pi is less accessible/mounted behind a mirror:
 - A captive portal for setting/resetting WiFi credentials via another device
 - Remotely update the OS and MM application
 - Easily deploy and maintain a fleet of MagicMirrors
 - balenaCloud control of the device and environment variables, ssh access
+
+## Hardware Compatibility
+This implementation is tested and optimized for:
+- **Raspberry Pi 3/3A+/3B+**: Recommended for standard installations
+- **WaveShare 13.3" Magic Mirror**: Full support including:
+  - 1920x1080 IPS display with automatic resolution configuration
+  - Capacitive touchscreen support (up to 10-point touch)
+  - WM8960 sound card for microphone input (voice assistant ready)
+  - Optimized display settings for mirror installations
 
 ## Getting Started
 Create a [free balenaCloud account](https://dashboard.balena-cloud.com/signup?) and the use the deploy button below to create a new MagicMirror fleet. Then add a new device (make sure to select "WiFi + Ethernet" if you want your mirror to use WiFi), burn the SD card with [Etcher](https://www.balena.io/etcher/), insert in your Raspberry Pi and apply power. Make sure a display of some sort is connected to your device's HDMI port.
@@ -31,10 +40,32 @@ Power users will want to use the above method to change the contents of the conf
 - `/opt/magic_mirror/modules`
 - `/opt/magic_mirror/css`
 
+## Voice Assistant Support (WaveShare Devices)
+For WaveShare Magic Mirror devices with the WM8960 sound card, you can add voice assistant capabilities:
+
+1. **Install voice modules** via the MagicMirror terminal (ssh into the magicmirror container):
+   ```
+   cd modules
+   git clone [your preferred voice assistant module]
+   ```
+
+2. **Popular voice assistant modules**:
+   - MMM-AssistantMk2 (Google Assistant)
+   - MMM-Hotword (wake word detection)
+   - MMM-voice (basic voice commands)
+
+3. **Audio configuration**: The browser block is configured with GPU support and the device should automatically detect the WM8960 sound card. You may need to configure ALSA settings via device configuration if needed.
+
 ## How it works
-This project uses the server-only image of MagicMirror located [here](https://hub.docker.com/r/bastilimbach/docker-magicmirror/) and then installs the Nano text editor on top of it. This makes the MagicMirror content available on http://localhost:8080
+This project uses the actively-maintained [karsten13/magicmirror](https://hub.docker.com/r/karsten13/magicmirror/) Docker image running MagicMirror² v2.33.0+ in server-only mode (no Electron browser). The Nano text editor is installed for easy configuration editing via the Balena terminal. MagicMirror serves its content on http://localhost:8080
 
-We then use the balena [browser block](https://github.com/balenablocks/browser) to display the content being served by MagicMirror. See the link for more options you can adjust on the browser block.
+We then use the balena [browser block](https://github.com/balenablocks/browser) to display the content being served by MagicMirror in kiosk mode. The browser is configured for:
+- Full HD display (1920x1080) optimized for WaveShare devices
+- GPU acceleration for smooth rendering
+- Touch input support
+- Hidden cursor for clean mirror appearance
 
-The [WiFi Connect](https://github.com/balenablocks/wifi-connect) block provides a utility for dynamically setting the WiFi configuration on a the device via a captive portal. See the link for more options regarding WiFi Connect.
+See the browser block link for more options you can adjust.
+
+The [WiFi Connect](https://github.com/balenablocks/wifi-connect) block provides a utility for dynamically setting the WiFi configuration on the device via a captive portal. See the link for more options regarding WiFi Connect.
 
