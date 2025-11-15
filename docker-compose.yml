@@ -23,7 +23,7 @@ services:
     labels:
       io.balena.features.dbus: "1"
     environment:
-      LAUNCH_URL: 'http://localhost:8080'
+      LAUNCH_URL: 'https://home.brzezinka.eu/ekran-parter/0'
       KIOSK: '1'
       # WaveShare 13.3" display is 1920x1080
       WINDOW_SIZE: '1920,1080'
