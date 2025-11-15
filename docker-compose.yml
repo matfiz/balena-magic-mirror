@@ -4,34 +4,43 @@ volumes:
     mm-modules:
     mm-css:
 services:
-  magicmirror:
-    build: .
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - mm-config:/opt/magic_mirror/config
-      - mm-modules:/opt/magic_mirror/modules
-      - mm-css:/opt/magic_mirror/css
-    environment:
-      # MagicMirror runs in server-only mode (no Electron)
-      # Browser block will display the UI
-      MM_SCENARIO: 'server'
-      MM_PORT: '8080'
+  # MagicMirror service - disabled in favor of direct Home Assistant dashboard
+  # Uncomment to use MagicMirror instead of Home Assistant
+  # magicmirror:
+  #   build: .
+  #   restart: unless-stopped
+  #   network_mode: host
+  #   volumes:
+  #     - mm-config:/opt/magic_mirror/config
+  #     - mm-modules:/opt/magic_mirror/modules
+  #     - mm-css:/opt/magic_mirror/css
+  #   environment:
+  #     # MagicMirror runs in server-only mode (no Electron)
+  #     # Browser block will display the UI
+  #     MM_SCENARIO: 'server'
+  #     MM_PORT: '8080'
   browser:
     image: balenablocks/browser
     privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse
     network_mode: host
     labels:
       io.balena.features.dbus: "1"
+      io.balena.features.audio: "1"  # Enable audio output and input (microphone)
+    devices:
+      - /dev/snd  # Audio device access
     environment:
-      LAUNCH_URL: 'http://localhost:8080'
+      LAUNCH_URL: 'https://home.brzezinka.eu/ekran-parter/0'
       KIOSK: '1'
       # WaveShare 13.3" display is 1920x1080
       WINDOW_SIZE: '1920,1080'
-      # Enable touch support for capacitive touchscreen
+      # Enable GPU for better performance and touch support
       ENABLE_GPU: '1'
       # Disable cursor for clean mirror appearance
       CURSOR: '0'
+      # Audio configuration
+      PULSE_SERVER: 'unix:/run/pulse/pulseaudio.socket'
+      # Flags for touch and media permissions
+      FLAGS: '--enable-features=WebRTC --use-fake-ui-for-media-stream --disable-features=WebRtcHideLocalIpsWithMdns'
   wifi-connect:
     image: balenablocks/wifi-connect:armv7hf
     restart: always
