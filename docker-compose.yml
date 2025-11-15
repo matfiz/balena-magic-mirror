@@ -15,6 +15,7 @@ services:
     environment:
       # MagicMirror runs in server-only mode (no Electron)
       # Browser block will display the UI
+      MM_SCENARIO: 'server'
       MM_PORT: '8080'
   browser:
     image: balenablocks/browser
@@ -23,7 +24,7 @@ services:
     labels:
       io.balena.features.dbus: "1"
     environment:
-      LAUNCH_URL: 'https://home.brzezinka.eu/ekran-parter/0'
+      LAUNCH_URL: 'http://localhost:8080'
       KIOSK: '1'
       # WaveShare 13.3" display is 1920x1080
       WINDOW_SIZE: '1920,1080'
