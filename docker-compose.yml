@@ -23,14 +23,14 @@ services:
     labels:
       io.balena.features.dbus: "1"
     environment:
-      LAUNCH_URL: 'http://localhost:8080'
+      LAUNCH_URL: 'http://http://172.17.17.223:8090'
       KIOSK: '1'
       # WaveShare 13.3" display is 1920x1080
       WINDOW_SIZE: '1920,1080'
       # Enable touch support for capacitive touchscreen
       ENABLE_GPU: '1'
       # Disable cursor for clean mirror appearance
-      CURSOR: '0'
+      CURSOR: '1'
   wifi-connect:
     image: balenablocks/wifi-connect:armv7hf
     restart: always
